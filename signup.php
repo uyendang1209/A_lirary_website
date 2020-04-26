@@ -2,6 +2,34 @@
 session_start();
 include('includes/config.php');
 error_reporting(0);
+if(isset($_POST['signup']))
+{ 
+$StudentId= $_POST['studentid'];   
+$fname=$_POST['fullanme'];
+$mobileno=$_POST['mobileno'];
+$email=$_POST['email'];
+$password=$_POST['password']; 
+$status=1;
+$sql="INSERT INTO  tblstudents(StudentId,FullName,MobileNumber,EmailId,Password,Status) VALUES(:StudentId,:fname,:mobileno,:email,:password,:status)";
+$query = $dbh->prepare($sql);
+$query->bindParam(':StudentId',$StudentId,PDO::PARAM_STR);
+$query->bindParam(':fname',$fname,PDO::PARAM_STR);
+$query->bindParam(':mobileno',$mobileno,PDO::PARAM_STR);
+$query->bindParam(':email',$email,PDO::PARAM_STR);
+$query->bindParam(':password',$password,PDO::PARAM_STR);
+$query->bindParam(':status',$status,PDO::PARAM_STR);
+$query->execute();
+$lastInsertId = $dbh->lastInsertId();
+if($lastInsertId)
+{
+echo '<script>alert("Your Registration successfull and your student id is  "+"'.$StudentId.'")</script>';
+echo "<script type='text/javascript'> document.location ='index.php'; </script>";
+}
+else 
+{
+echo "<script>alert('Something went wrong. Please try again');</script>";
+}
+}
 ?>
 
 <!DOCTYPE html>
@@ -49,6 +77,19 @@ $("#loaderIcon").hide();
 error:function (){}
 });
 }
+function checkStudentId() {
+$("#loaderIcon").show();
+jQuery.ajax({
+url: "check_studentid.php",
+data:'studentid='+$("#studentid").val(),
+type: "POST",
+success:function(data){
+$("#sid-availability-status").html(data);
+$("#loaderIcon").hide();
+},
+error:function (){}
+});
+}
 </script>    
 
 </head>
@@ -71,6 +112,11 @@ error:function (){}
                     </div>
                     <div class="panel-body">
                         <form name="signup" method="post" onSubmit="return valid();">
+                            <div class="form-group">
+                                <label>Enter Student Id</label>
+                                <input class="form-control" type="text" name="studentid" id="studentid" onBlur="checkStudentId()" autocomplete="off" required />
+                                <span id="sid-availability-status" style="font-size:12px;"></span>
+                            </div>
                             <div class="form-group">
                                 <label>Enter Full Name</label>
                                 <input class="form-control" type="text" name="fullanme" autocomplete="off" required />
