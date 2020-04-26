@@ -5,6 +5,24 @@ include('includes/config.php');
 if($_SESSION['alogin']!=''){
 $_SESSION['alogin']='';
 }
+if(isset($_POST['login']))
+{
+$username=$_POST['username'];
+$password=$_POST['password'];
+$sql ="SELECT UserName,Password FROM admin WHERE UserName=:username and Password=:password";
+$query= $dbh -> prepare($sql);
+$query-> bindParam(':username', $username, PDO::PARAM_STR);
+$query-> bindParam(':password', $password, PDO::PARAM_STR);
+$query-> execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
+if($query->rowCount() >= 0)
+{
+$_SESSION['alogin']=$_POST['username'];
+echo "<script type='text/javascript'> document.location ='admin/dashboard.php'; </script>";
+} else{
+echo "<script>alert('Invalid Details');</script>";
+}
+}
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -54,10 +72,6 @@ $_SESSION['alogin']='';
 <label>Password</label>
 <input class="form-control" type="password" name="password" autocomplete="off" required />
 </div>
- <div class="form-group">
-<label>Verification code : </label>
-<input type="text"  name="vercode" maxlength="5" autocomplete="off" required style="width: 150px; height: 25px;" />&nbsp;<img src="captcha.php">
-</div>  
 
  <button type="submit" name="login" class="btn btn-info">LOGIN </button>
 </form>
@@ -66,8 +80,7 @@ $_SESSION['alogin']='';
 </div>
 </div>  
 <!---LOGIN PABNEL END-->            
-             
- 
+
     </div>
     </div>
      <!-- CONTENT-WRAPPER SECTION END-->
