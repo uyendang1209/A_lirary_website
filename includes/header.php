@@ -41,8 +41,14 @@
                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="change-password.php">Change Password</a></li>
                                 </ul>
                             </li>
-                            <li><a href="issued-books.php">Issued Books</a></li>
-                          
+                            <li>
+                                <a href="#" class="dropdown-toggle" id="ddlmenuItem" data-toggle="dropdown"> Issue Books <i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="issue-book.php">Issue New Book</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="issued-books.php">Issued Books</a></li>
+                                </ul>
+                            </li>
+                            
 
                         </ul>
                     </div>
