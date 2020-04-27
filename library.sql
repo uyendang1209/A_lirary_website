@@ -53,6 +53,7 @@ INSERT INTO `admin` (`id`, `FullName`, `AdminEmail`, `UserName`, `Password`, `up
 
 CREATE TABLE `tblbooks` (
   `id` int(11) NOT NULL,
+  `ISBNNumber` int(11) DEFAULT NULL,
   `BookName` varchar(255) DEFAULT NULL,
   `CategoryName` varchar(150) DEFAULT NULL,
   `AuthorName` varchar(159) DEFAULT NULL,
