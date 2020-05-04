@@ -49,6 +49,7 @@ header('location:manage-issued-books.php');
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     <script src="assets/js/jquery-1.10.2.js"></script>
+    <script src="assets/js/rolldate.min.js"></script>
     <!-- <script src="assets/js/moment.js"></script> -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script> -->
     <!-- BOOTSTRAP SCRIPTS  -->
@@ -117,7 +118,7 @@ error:function (){}
 Issue a New Book
 </div>
 <div class="panel-body">
-<form role="form" method="post">
+<form role="form" method="post" onSubmit="valid()">
 
 <div class="form-group">
 <label>Student id<span style="color:red;">*</span></label>
@@ -143,18 +144,49 @@ Issue a New Book
 
  <div class="form-group">
 <label>Issue date</label>
-<input class="form-control" type="text" value="<?php $t=time(); echo htmlentities(date("Y-m-d h:m:s",$t));?>"  required="required" />
+<input class="form-control" type="text" value="<?php $t=time(); echo htmlentities(date("Y-m-d h:m:s",$t));?>"  required="required" readonly/>
 </div>
-
+<script>
+function valid(){
+  var expdate = Date.parse($('#expdate').val());
+  var cur_date = Math.round(new Date().getTime());
+  console.log(expdate)
+  if (expdate < cur_date){
+    console.log("test")
+    $('#submit').prop('disabled',true);
+    $("@expdate-status").html("exp date must greater than start date");
+  } else {
+    $('#submit').prop('disabled',false);
+    $("@expdate-status").html("");
+  }
+}
+$('#expdate').change(valid);
+</script>
  <div class="form-group">
 <label>Expired date<span style="color:red;">*</span></label>
-    <div  class="input-group date" data-provide="datepicker">
-        <input type='text' class="form-control"/>
-        <span class="input-group-addon">
-            <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-    </div>
+<input readonly type="text" id="expdate" class="form-control" placeholder="YYYY-MM-DD hh:mm:ss" required="required" onchange ="valid()">
+<span id="expdate-status" style="font-size:12px;"></span>
 </div>
+<script>
+new Rolldate({
+    el: '#expdate',
+    format: 'YYYY-MM-DD hh:mm:ss',
+    beginYear: 2020,
+    endYear: 2100,
+    lang: { 
+      title: 'Select A Date', 
+      cancel: 'Cancel', 
+      confirm: 'Confirm', 
+      year: '', 
+      month: '', 
+      day: '', 
+      hour: '', 
+      min: '', 
+      sec: '' 
+    }
+})
+</script>
+
  <button type="submit" name="issue" id="submit" class="btn btn-info">Issue Book </button>
 
                                     </form>
